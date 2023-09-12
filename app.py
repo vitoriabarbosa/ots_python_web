@@ -1,8 +1,17 @@
 from flask import Flask, render_template, request, session, abort, flash, redirect, url_for
 from posts import posts
+import sqlite3
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'pudim'
+
+
+app.config.from_object(__name__)
+
+DATABASE = "banco.bd"
+
+def conectar():
+    return sqlite3.connect(DATABASE)
 
 
 @app.route('/')
@@ -40,10 +49,11 @@ def inserir_entradas():
         flash("Post criado com sucesso!")
     return redirect(url_for('exibir_entradas'))
 
-@app.route('/posts/<int:id>')
-def exibir_entrada(id):
-    try:
-        entrada = posts[id-1]
-        return render_template('exibir_entrada.html', entrada=entrada)
-    except Exception:
-        return abort(404)
+
+# @app.route('/posts/<int:id>')
+# def exibir_entrada(id):
+#     try:
+#         entrada = posts[id-1]
+#         return render_template('exibir_entrada.html', entrada=entrada)
+#     except Exception:
+#         return abort(404)
